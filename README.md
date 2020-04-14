@@ -43,7 +43,9 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 - [x] Połączenie API z bazą danych
 
 # Mobile 
-- [x] Połączenie między ESP a RASPBERRY 
-- [x] Połączenie między ESP a RASPBERRY 
-- [x] Połączenie między ESP a RASPBERRY 
-- [x] Połączenie między ESP a RASPBERRY 
+- [x] Plan aplikacji mobilnej
+- [x] Wykrycie opuszczenia domu przez użytkownika 
+- [x] Implementacja notyfikiacji push z informacją o otwartch drzwiach/oknach
+- [x] Autentykacja użytkownika i uzyskanie unikalnego tokenu
+- [x] Pobranie danych użytkownika z serwera
+- [x] Przetwarzanie i prezentacja danych
