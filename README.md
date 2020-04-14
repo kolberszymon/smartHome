@@ -22,10 +22,10 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 # Postęp poszczególnych części
 
 # Hardware
+- [x] Połączenie kontaktronu i implementacja jego obsługi przez ESP
+- [x] Implementacja automatycznego łączenia się ESP z siecią Wi-Fi 
+- [x] Ustalenie formatu przesyłanych danych 
 - [x] Połączenie między ESP a RASPBERRY
-- [x] Połączenie między ESP a RASPBERRY 
-- [x] Połączenie między ESP a RASPBERRY 
-- [x] Połączenie między ESP a RASPBERRY 
 
 # Server Side
 - [x] Wybór protokołu komunikacyjnego 
