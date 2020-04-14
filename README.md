@@ -32,20 +32,23 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 - [x] Przetestowanie i usprawnienie funkcjonalności
 
 # Server Side
-- [x] Wybór protokołu komunikacyjnego 
-- [x] Przygotowanie Virtual Machine i Raspberry PI 
-- [x] Połączenie między Raspberry a ESP 
-- [x] Opracowanie komunikacji pomiędzy androidem a bazą danych na VM - tunel ssh, uwierzytelnianie
+- [x] Wybór protokołu komunikacyjnego (ESP --> Raspberry)
+- [x] Przygotowanie OS na Virtual Machine i Raspberry PI 
+- [x] Połączenie między Raspberry a ESP za pomocą WIFI 
+- [x] Zestawienie tuneli ssh pomiędzy VM a rasp, za pośrednictwem plutona
+- [x] Stworzenie bazy danych na VM z wykorzystaniem dockera
+- [x] Opracowanie komunikacji pomiędzy androidem a api na VM, z wykorzystaniem tunelu ssh
 - [x] Konfiguracyjny DockerFile
-- [x] Uwierzytelnianie do bazy danych na maszynie wirtualnej
-- [x] Implementacja tunelu na androidzie
 - [x] Stworzenie RESTful API w oparciu o Flask'a
-- [x] Połączenie API z bazą danych
+- [x] Uwierzytelnianie do bazy danych na maszynie wirtualnej z wykorzystaniem tokenów
+- [x] Połączenie API z bazą danych postgresa
+- [x] Opracowanie skryptu wstawiające dane z ESP do bazy danych, bezpośrednio z raspberry pi
 
 # Mobile 
 - [x] Plan aplikacji mobilnej
 - [x] Wykrycie opuszczenia domu przez użytkownika 
 - [x] Implementacja notyfikiacji push z informacją o otwartch drzwiach/oknach
-- [x] Autentykacja użytkownika i uzyskanie unikalnego tokenu
+- [x] Implementacja tunelu na androidzie
+- [x] Generowanie zapytań http do komunikacji z api
 - [x] Pobranie danych użytkownika z serwera
 - [x] Przetwarzanie i prezentacja danych
