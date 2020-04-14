@@ -22,10 +22,14 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 # Postęp poszczególnych części
 
 # Hardware
-- [x] Połączenie kontaktronu i implementacja jego obsługi przez ESP
+- [x] Wybór i zakup niezbędnych urządzeń
 - [x] Implementacja automatycznego łączenia się ESP z siecią Wi-Fi 
+- [x] Stworzenie Publishera na ESP wysyłającego informacje do Raspberry PI
+- [x] Połączenie kontaktronu i implementacja jego obsługi przez ESP
 - [x] Ustalenie formatu przesyłanych danych 
-- [x] Połączenie między ESP a RASPBERRY
+- [x] Napisanie testowego programu wysyłającego wiadomości na podstawie tych otrzymanych z kontaktronów
+- [x] Wysyłanie do Raspberry PI konkretnych danych otrzymanych z kontaktronów 
+- [x] Przetestowanie i usprawnienie funkcjonalności
 
 # Server Side
 - [x] Wybór protokołu komunikacyjnego 
