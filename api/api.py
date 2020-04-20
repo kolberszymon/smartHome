@@ -13,7 +13,7 @@ import random
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = '***'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////***.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///***'
 
 db = SQLAlchemy(app)
 
@@ -94,6 +94,9 @@ def delete_user(current_user):
 def add_collection(current_user):
     data = request.get_json()
 
+    if 'collection' not in data or 'name' not in data:
+    	return jsonify({'message' : 'invalid argument set!'})
+
     all_collections = db_exec("SELECT id_kolekcja FROM uzytkownicy")
     list_of_collections = []
     for row in all_collections:
@@ -102,9 +105,6 @@ def add_collection(current_user):
 
     if data['collection'] in list_of_collections:
         return jsonify({'message' : 'collection already in use!'})
-
-    if 'name' not in data:
-    	data['name'] = "My collection"	# collection name isn't mandatory argument
         
     db_exec("INSERT INTO uzytkownicy (id_klient, id_kolekcja, nazwa_kolekcji) values (%s, %s, %s);", current_user.username, data['collection'], data['name'])
     return jsonify({'message' : 'collection assigned correctly!'})
@@ -131,6 +131,33 @@ def rename_collection(current_user):
 	return jsonify({'message' : 'operation not permitted!'})
 
 
+@app.route('/share_collection', methods=['POST'])
+@token_required
+def share_collection(current_user):
+	data = request.get_json()
+
+	if 'collection' not in data or 'successor' not in data:
+		return jsonify({'message' : 'invalid argument set!'})
+
+	user_collections = db_exec("SELECT id_kolekcja FROM uzytkownicy WHERE id_klient = %s", current_user.username)
+	list_of_collections = []
+	for row in user_collections:
+		if row[0] is not None:
+			list_of_collections.append(row[0])
+	if data['collection'] not in list_of_collections:
+		return jsonify({'message' : 'operation not permitted!'})
+
+	successor = User.query.filter_by(username=data['successor']).first()
+	if not successor:
+		return jsonify({'message' : 'successor does not exist!'})
+
+	if 'name' not in data:
+		data['name'] = 'Shared collection' 
+
+	db_exec("INSERT INTO uzytkownicy (id_klient, id_kolekcja, nazwa_kolekcji) VALUES (%s, %s, %s)", data['successor'], data['collection'], data['name'])
+	return jsonify({'message' : 'collection shared successfully'})
+
+
 @app.route('/delete_collection', methods=['DELETE'])
 @token_required
 def delete_collection(current_user):
@@ -148,9 +175,14 @@ def delete_collection(current_user):
 	if data['collection'] not in list_of_collections:
 		return jsonify({'message' : 'operation not permitted!'})
 
+	num_of_owners = db_exec("SELECT COUNT(*) FROM uzytkownicy WHERE id_kolekcja = %s", data['collection'])
+	if num_of_owners[0][0] > 1:
+		db_exec("DELETE FROM uzytkownicy WHERE id_kolekcja = %s AND id_klient = %s", data['collection'], current_user.username)
+		return jsonify({'message' : 'collection dropped successfully!'})
+
 	num_of_devices = db_exec("SELECT COUNT(*) FROM informacje WHERE id_kolekcja = %s", data['collection'])
 	num_of_devices = num_of_devices[0][0]
-	if num_of_devices != 0:
+	if num_of_devices > 0:
 		return jsonify({'message' : 'this collection is not empty!'})
 
 	db_exec("DELETE FROM uzytkownicy WHERE id_kolekcja = %s", data['collection'])
