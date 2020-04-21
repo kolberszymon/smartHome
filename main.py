@@ -23,16 +23,5 @@ prevValue = 0
 
 while True:
 	sleep(1)
-	print("s.v.: " + str( switch.value() ) )
-	client.publish(topic, msg=str(switch.value()))
-	if prevValue != switch.value():
-		if switch.value() == 1: # door opened
-			client.publish(topic, msg='State: 1, Door Opened')
-			print('Door Opened')
-		if switch.value() == 0: # door closed
-			client.publish(topic, msg='State: 0, Door Closed')
-			print('Door Closed')
-		try:
-			prevValue = switch.value()
-		except:
-			prevValue = -1
+	print("s.v.: " + str( not switch.value() ) )
+	client.publish(topic, msg=str(not switch.value()))
