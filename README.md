@@ -52,3 +52,15 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 - [x] Generowanie zapytań http do komunikacji z api
 - [x] Pobranie danych użytkownika z serwera
 - [x] Przetwarzanie i prezentacja danych
+
+
+# Dokumentacja
+
+## Hardware
+Obwód elektryczny prezentuje się następująco:
+![image of hardware](https://i.ibb.co/TMnN6GD/Screen-Shot-2020-04-21-at-5-07-52-PM.png)
+
+Skorzystaliśmy z modułu Wi-Fi Wemos D1 mini z ESP8266. Dodatkowo wykorzystaliśmy czujniki otwarcia/zamknięcia (kontaktrony) z gotową obudową, dolutowaliśmy przewody oraz wbudowaliśmy rezystor 100kΩ. Zasilanie dostarczyliśmy wykorzystując możliwość podciągania zasilania programowo przez pin D1 (GPIO 5). W celu zaprogramowania urządzenia korzystaliśmy z języka MicroPython, w środowisku WebREPL. Wybór tego środowiska umożliwił nam bezproblemową pracę z urządzeniem na różnych systemach operacyjnych.
+Do ESP wgraliśmy napisany przez nas skrypt boot.py, wywoływany przy uruchomieniu urządzenia, w którym zawarty został kod, dzięki któremu ESP łączy się automatycznie z siecią Wi-Fi stworzoną na “Raspberry”. W następnej kolejności uruchamiany jest skrypt main.py, który zapewnia obsługę kontaktronu oraz wysyłanie danych do bazy danych na serwerze. Do przesyłania danych wykorzystaliśmy protokół MQTT. ESP jest publisherem, a Raspberry brokerem.
+
+## Aplikacja Mobilna
