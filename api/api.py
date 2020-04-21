@@ -8,12 +8,11 @@ from functools import wraps
 import psycopg2
 import json
 import time
-import random
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = '***'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///***'
+app.config['SECRET_KEY'] = ''	# SECRET
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' # SECRET
 
 db = SQLAlchemy(app)
 
@@ -23,18 +22,13 @@ class User(db.Model):
     password = db.Column(db.String(80))
 
 
-# class Network(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     ssid = db.Column(db.String(50))
-#     user_id = db.Column(db.Integer)
-
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
         # ============================== T O  D E L E T E ==============================
-        #print(request.headers)
+        print("\n\n")
+        print(request.headers, end="")
         # ============================== T O  D E L E T E ==============================
 
         if 'x-access-token' in request.headers:
@@ -54,9 +48,28 @@ def token_required(f):
     return decorated
 
 
+@app.errorhandler(404)	# route does not exist
+def resource_not_found(e):
+	return jsonify({'message' : str(e)}), 404
+
+
+@app.errorhandler(400)	# eg.: bad Content-Type
+def resource_not_found(e):
+	return jsonify({'message' : str(e)}), 400
+
+
+@app.errorhandler(Exception) # eg.: incorrect Content-Length
+def resource_not_found(e):
+	return jsonify({'message' : str(e)}), 500
+
+
 @app.route('/create_user', methods=['POST'])
 def create_user():
     data = request.get_json()
+
+    if len(data['username']) > 50 or len(data['password']) > 80:
+    	return jsonify({'message' : 'Failed, username or password is too long!'})
+
     user = User.query.filter_by(username=data['username']).first()
 
     if user:
@@ -67,10 +80,6 @@ def create_user():
     new_user = User(username=data['username'], password=hashed_password)
     db.session.add(new_user)
     db.session.commit()
-
-    # ============================== T O  D E L E T E ==============================
-    #db_exec("INSERT INTO uzytkownicy (id_klient) VALUES(%s)", data['username'])
-    # ============================== T O  D E L E T E ==============================
 
     return jsonify({'message' : 'New user created!'})
 
@@ -351,14 +360,8 @@ def login():
         return make_response(jsonify({'message' : 'User doesn\'t exist!'}), 401, {'WWW-Authenticate' : 'Basic realm="User doesn\'t exist!"'})
 
     if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'username' : user.username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
-        # token = jwt.encode({
-        # 	'username' : user.username, 
-        # 	'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30), 
-        # 	'salt' : random.randrange(10**9)
-        # 	}, app.config['SECRET_KEY'])	# token with salting
-
-        return jsonify({'message' : 'ok', 'token' : token.decode('UTF-8')})
+    	token = jwt.encode({'username' : user.username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+    	return jsonify({'message' : 'ok', 'token' : token.decode('UTF-8')})
 
     return make_response(jsonify({'message' : 'Login and password don\'t match!'}), 401, {'WWW-Authenticate' : 'Basic realm="Login and password don\'t match!"'})
 
@@ -373,8 +376,8 @@ def validate(current_user):
 
 
 def db_exec(inquiry, *args):
-    connection = psycopg2.connect(user="postgres", password="postgres",
-                                  host="localhost", port="5432", database="dane_sensory")
+    connection = psycopg2.connect(user="", password="",	# SECRET
+                                  host="", port="", database="") # SECRET
     try:
         cursor=connection.cursor()
         cursor.execute(inquiry, args)
@@ -392,44 +395,6 @@ def db_exec(inquiry, *args):
             print("PostgreSQL connection is closed")
 
 
-# ============================== T O  D E L E T E ==============================
-# def select_all():
-#     connection = psycopg2.connect(user="postgres", password="postgres",
-#                                   host="localhost", port="5432", database="dane_sensory")
-#     try:
-#         cursor=connection.cursor()
-
-#         cursor.execute("SELECT * from informacje;")
-
-#         records = cursor.fetchall()
-#         print(records)
-
-#     except (Exception, psycopg2.Error) as error :
-#         print("Error while connecting to PostgreSQL", error)
-
-#     finally:
-#         if (connection):
-#             cursor.close()
-#             connection.close()
-#             print("PostgreSQL connection is closed")
-
-# @app.route('/list_users', methods=['GET'])
-# @token_required
-# def get_all_users(current_user):
-#     users = User.query.all()
-
-#     output = []
-
-#     for user in users:
-#         user_data = {}
-#         user_data['username'] = user.username
-#         user_data['password'] = user.password
-#         output.append(user_data)
-
-#     return jsonify({'users' : output})
-# ============================== T O  D E L E T E ==============================
-
-
 if __name__ == '__main__':
     #db.create_all()
-    app.run(debug=True, host='0.0.0.0')	# TURN OFF DEBUGGER ON THE FINAL RELEASE !!!
+    app.run(debug=True, host='0.0.0.0')
