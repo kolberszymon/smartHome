@@ -57,7 +57,7 @@ Drzwi są otwarte → Użytkownik rozłącza się z domowym WiFi → Urządzenie
 # Dokumentacja
 
 Ogólna
-https://github.com/kolberszymon/smartHome/blob/master/Dokumentacja%20Doorime.pdf
+https://github.com/kolberszymon/smartHome/blob/master/Dokumentacja%20Doorime%20.pdf
 
 Api
 https://github.com/kolberszymon/smartHome/blob/master/api/api_v3-dokumentacja.pdf
